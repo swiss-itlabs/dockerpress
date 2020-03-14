@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+  dp.database:
+    image: mariadb/server:10.3
+    restart: always
+    volumes:
+      - dp.vol.database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - dp.net
+
+  dp.website:
+    depends_on:
+      - dp.database
+    image: wordpress:latest
+    restart: always
+    volumes:
+      - dp.vol.website:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: dp.database:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - dp.net
+
+networks:
+  dp.net:
+    driver: bridge
+
+volumes:
+  dp.vol.database:
+  dp.vol.website:
