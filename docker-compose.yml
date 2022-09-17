@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   database:
-    image: mariadb/server:10.3
+    image: mariadb:10.9
     restart: always
     volumes:
       - vol.database:/var/lib/mysql
@@ -17,12 +17,12 @@ services:
   website:
     depends_on:
       - database
-    image: wordpress:latest
+    image: wordpress:6
     restart: always
     volumes:
       - vol.website:/var/www/html
     environment:
-      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_HOST: database
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: wordpress
